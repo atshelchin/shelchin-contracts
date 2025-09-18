@@ -20,9 +20,7 @@ contract MinimalProxyFactory {
 
         assembly {
             proxy := create2(0, add(bytecode, 0x20), mload(bytecode), salt)
-            if iszero(extcodesize(proxy)) {
-                revert(0, 0)
-            }
+            if iszero(extcodesize(proxy)) { revert(0, 0) }
         }
 
         emit ProxyDeployed(implementation, proxy, salt);
@@ -34,11 +32,10 @@ contract MinimalProxyFactory {
      * @param salt Unique salt for deterministic deployment
      * @param data Initialization calldata
      */
-    function deployProxyAndCall(
-        address implementation,
-        bytes32 salt,
-        bytes calldata data
-    ) external returns (address proxy) {
+    function deployProxyAndCall(address implementation, bytes32 salt, bytes calldata data)
+        external
+        returns (address proxy)
+    {
         proxy = this.deployProxy(implementation, salt);
 
         if (data.length > 0) {
@@ -61,14 +58,7 @@ contract MinimalProxyFactory {
      */
     function computeProxyAddress(address implementation, bytes32 salt) external view returns (address) {
         bytes memory bytecode = _getProxyBytecode(implementation);
-        bytes32 hash = keccak256(
-            abi.encodePacked(
-                bytes1(0xff),
-                address(this),
-                salt,
-                keccak256(bytecode)
-            )
-        );
+        bytes32 hash = keccak256(abi.encodePacked(bytes1(0xff), address(this), salt, keccak256(bytecode)));
         return address(uint160(uint256(hash)));
     }
 
@@ -78,9 +68,7 @@ contract MinimalProxyFactory {
      */
     function _getProxyBytecode(address implementation) private pure returns (bytes memory) {
         return abi.encodePacked(
-            hex"3d602d80600a3d3981f3363d3d373d3d3d363d73",
-            implementation,
-            hex"5af43d82803e903d91602b57fd5bf3"
+            hex"3d602d80600a3d3981f3363d3d373d3d3d363d73", implementation, hex"5af43d82803e903d91602b57fd5bf3"
         );
     }
 }

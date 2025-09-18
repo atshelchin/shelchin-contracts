@@ -69,11 +69,12 @@ contract Delegator {
      * @param data Call data
      * @param value ETH value to send
      */
-    function execute(
-        address to,
-        bytes calldata data,
-        uint256 value
-    ) external payable onlyOwner returns (bool success, bytes memory result) {
+    function execute(address to, bytes calldata data, uint256 value)
+        external
+        payable
+        onlyOwner
+        returns (bool success, bytes memory result)
+    {
         if (to == address(0)) revert InvalidTarget();
         if (msg.value < value) revert InsufficientETH();
 
@@ -207,12 +208,7 @@ contract Delegator {
      * @param amount Amount to withdraw
      * @param data Additional data
      */
-    function withdrawERC1155(
-        address token,
-        uint256 id,
-        uint256 amount,
-        bytes calldata data
-    ) external onlyOwner {
+    function withdrawERC1155(address token, uint256 id, uint256 amount, bytes calldata data) external onlyOwner {
         IERC1155(token).safeTransferFrom(address(this), owner, id, amount, data);
     }
 
@@ -229,38 +225,25 @@ contract Delegator {
     /**
      * @dev Handle ERC721 token reception
      */
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes calldata
-    ) external pure returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
         return this.onERC721Received.selector;
     }
 
     /**
      * @dev Handle ERC1155 single token reception
      */
-    function onERC1155Received(
-        address,
-        address,
-        uint256,
-        uint256,
-        bytes calldata
-    ) external pure returns (bytes4) {
+    function onERC1155Received(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4) {
         return this.onERC1155Received.selector;
     }
 
     /**
      * @dev Handle ERC1155 batch token reception
      */
-    function onERC1155BatchReceived(
-        address,
-        address,
-        uint256[] calldata,
-        uint256[] calldata,
-        bytes calldata
-    ) external pure returns (bytes4) {
+    function onERC1155BatchReceived(address, address, uint256[] calldata, uint256[] calldata, bytes calldata)
+        external
+        pure
+        returns (bytes4)
+    {
         return this.onERC1155BatchReceived.selector;
     }
 
@@ -268,10 +251,9 @@ contract Delegator {
      * @dev Support ERC165 interface detection
      */
     function supportsInterface(bytes4 interfaceId) external pure returns (bool) {
-        return
-            interfaceId == 0x01ffc9a7 || // ERC165
-            interfaceId == 0x150b7a02 || // ERC721Receiver
-            interfaceId == 0x4e2312e0 || // ERC1155Receiver-single
-            interfaceId == 0xbc197c81;   // ERC1155Receiver-batch
+        return interfaceId == 0x01ffc9a7 // ERC165
+            || interfaceId == 0x150b7a02 // ERC721Receiver
+            || interfaceId == 0x4e2312e0 // ERC1155Receiver-single
+            || interfaceId == 0xbc197c81; // ERC1155Receiver-batch
     }
 }

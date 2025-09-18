@@ -19,18 +19,10 @@ contract DeployMinimalProxyScript is Script {
 
         // Deploy a proxy instance using the factory
         bytes32 salt = keccak256("example-proxy-1");
-        bytes memory initData = abi.encodeWithSelector(
-            Implementation.initialize.selector,
-            msg.sender,
-            "First Proxy",
-            100
-        );
+        bytes memory initData =
+            abi.encodeWithSelector(Implementation.initialize.selector, msg.sender, "First Proxy", 100);
 
-        address proxy = factory.deployProxyAndCall(
-            address(implementation),
-            salt,
-            initData
-        );
+        address proxy = factory.deployProxyAndCall(address(implementation), salt, initData);
 
         vm.stopBroadcast();
 
@@ -38,11 +30,7 @@ contract DeployMinimalProxyScript is Script {
         logDeployment(address(factory), address(implementation), proxy);
     }
 
-    function logDeployment(
-        address factory,
-        address implementation,
-        address proxy
-    ) internal view {
+    function logDeployment(address factory, address implementation, address proxy) internal view {
         string memory output = string(
             abi.encodePacked(
                 "\n",

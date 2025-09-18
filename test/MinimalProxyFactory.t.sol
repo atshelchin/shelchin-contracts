@@ -36,18 +36,9 @@ contract MinimalProxyFactoryTest is Test {
     function test_DeployProxyAndCall() public {
         bytes32 salt = keccak256("test2");
 
-        bytes memory initData = abi.encodeWithSelector(
-            Implementation.initialize.selector,
-            alice,
-            "Proxy1",
-            100
-        );
+        bytes memory initData = abi.encodeWithSelector(Implementation.initialize.selector, alice, "Proxy1", 100);
 
-        address proxy = factory.deployProxyAndCall(
-            address(implementation),
-            salt,
-            initData
-        );
+        address proxy = factory.deployProxyAndCall(address(implementation), salt, initData);
 
         Implementation proxyInstance = Implementation(proxy);
 
@@ -63,23 +54,13 @@ contract MinimalProxyFactoryTest is Test {
         address proxy1 = factory.deployProxyAndCall(
             address(implementation),
             salt1,
-            abi.encodeWithSelector(
-                Implementation.initialize.selector,
-                alice,
-                "Alice's Proxy",
-                50
-            )
+            abi.encodeWithSelector(Implementation.initialize.selector, alice, "Alice's Proxy", 50)
         );
 
         address proxy2 = factory.deployProxyAndCall(
             address(implementation),
             salt2,
-            abi.encodeWithSelector(
-                Implementation.initialize.selector,
-                bob,
-                "Bob's Proxy",
-                200
-            )
+            abi.encodeWithSelector(Implementation.initialize.selector, bob, "Bob's Proxy", 200)
         );
 
         assertNotEq(proxy1, proxy2);
@@ -102,12 +83,7 @@ contract MinimalProxyFactoryTest is Test {
         address proxy = factory.deployProxyAndCall(
             address(implementation),
             salt,
-            abi.encodeWithSelector(
-                Implementation.initialize.selector,
-                alice,
-                "Test Proxy",
-                10
-            )
+            abi.encodeWithSelector(Implementation.initialize.selector, alice, "Test Proxy", 10)
         );
 
         Implementation proxyInstance = Implementation(proxy);
@@ -148,12 +124,7 @@ contract MinimalProxyFactoryTest is Test {
         address proxy = factory.deployProxyAndCall(
             address(implementation),
             salt,
-            abi.encodeWithSelector(
-                Implementation.initialize.selector,
-                alice,
-                "Test",
-                100
-            )
+            abi.encodeWithSelector(Implementation.initialize.selector, alice, "Test", 100)
         );
 
         Implementation proxyInstance = Implementation(proxy);

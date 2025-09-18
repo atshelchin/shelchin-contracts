@@ -31,11 +31,7 @@ contract Implementation {
      * @param _name The name for this instance
      * @param _value Initial value
      */
-    function initialize(
-        address _owner,
-        string memory _name,
-        uint256 _value
-    ) external initializer {
+    function initialize(address _owner, string memory _name, uint256 _value) external initializer {
         owner = _owner;
         name = _name;
         value = _value;

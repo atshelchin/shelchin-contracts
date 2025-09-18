@@ -32,11 +32,7 @@ contract DelegatorTest is Test {
     function test_SingleExecute() public {
         bytes memory data = abi.encodeWithSelector(Counter.setNumber.selector, 42);
 
-        (bool success, bytes memory result) = delegator.execute(
-            address(counter),
-            data,
-            0
-        );
+        (bool success, bytes memory result) = delegator.execute(address(counter), data, 0);
 
         assertTrue(success);
         assertEq(counter.number(), 42);
@@ -46,11 +42,7 @@ contract DelegatorTest is Test {
         address recipient = makeAddr("recipient");
         uint256 initialBalance = recipient.balance;
 
-        (bool success,) = delegator.execute{value: 1 ether}(
-            recipient,
-            "",
-            1 ether
-        );
+        (bool success,) = delegator.execute{value: 1 ether}(recipient, "", 1 ether);
 
         assertTrue(success);
         assertEq(recipient.balance, initialBalance + 1 ether);
@@ -65,17 +57,11 @@ contract DelegatorTest is Test {
             value: 0
         });
 
-        calls[1] = Delegator.Call({
-            to: address(counter),
-            data: abi.encodeWithSelector(Counter.increment.selector),
-            value: 0
-        });
+        calls[1] =
+            Delegator.Call({to: address(counter), data: abi.encodeWithSelector(Counter.increment.selector), value: 0});
 
-        calls[2] = Delegator.Call({
-            to: address(counter),
-            data: abi.encodeWithSelector(Counter.increment.selector),
-            value: 0
-        });
+        calls[2] =
+            Delegator.Call({to: address(counter), data: abi.encodeWithSelector(Counter.increment.selector), value: 0});
 
         delegator.executeBatch(calls);
 
@@ -99,17 +85,10 @@ contract DelegatorTest is Test {
             value: 0
         });
 
-        calls[2] = Delegator.Call({
-            to: address(0),
-            data: "",
-            value: 0
-        });
+        calls[2] = Delegator.Call({to: address(0), data: "", value: 0});
 
-        calls[3] = Delegator.Call({
-            to: address(counter),
-            data: abi.encodeWithSelector(Counter.increment.selector),
-            value: 0
-        });
+        calls[3] =
+            Delegator.Call({to: address(counter), data: abi.encodeWithSelector(Counter.increment.selector), value: 0});
 
         bool[] memory results = delegator.tryExecuteBatch(calls);
 
@@ -128,17 +107,9 @@ contract DelegatorTest is Test {
 
         Delegator.Call[] memory calls = new Delegator.Call[](2);
 
-        calls[0] = Delegator.Call({
-            to: recipient1,
-            data: "",
-            value: 0.5 ether
-        });
+        calls[0] = Delegator.Call({to: recipient1, data: "", value: 0.5 ether});
 
-        calls[1] = Delegator.Call({
-            to: recipient2,
-            data: "",
-            value: 0.3 ether
-        });
+        calls[1] = Delegator.Call({to: recipient2, data: "", value: 0.3 ether});
 
         delegator.executeBatch{value: 0.8 ether}(calls);
 
@@ -154,11 +125,7 @@ contract DelegatorTest is Test {
 
     function test_OnlyOwnerCanExecuteBatch() public {
         Delegator.Call[] memory calls = new Delegator.Call[](1);
-        calls[0] = Delegator.Call({
-            to: address(counter),
-            data: "",
-            value: 0
-        });
+        calls[0] = Delegator.Call({to: address(counter), data: "", value: 0});
 
         vm.prank(alice);
         vm.expectRevert(Delegator.NotOwner.selector);
